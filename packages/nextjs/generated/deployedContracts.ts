@@ -5,10 +5,21 @@ const contracts = {
       name: "localhost",
       contracts: {
         Marketplace: {
-          address: "0x9A9f2CCfdE556A7E9Ff0848998Aa4a0CFD8863AE",
+          address: "0x68B1D87F95878fE05B998F19b66F4baba5De1aed",
           abi: [
             {
-              inputs: [],
+              inputs: [
+                {
+                  internalType: "string",
+                  name: "name",
+                  type: "string",
+                },
+                {
+                  internalType: "string",
+                  name: "symbol",
+                  type: "string",
+                },
+              ],
               stateMutability: "nonpayable",
               type: "constructor",
             },
@@ -157,6 +168,19 @@ const contracts = {
               type: "function",
             },
             {
+              inputs: [],
+              name: "currentMintId",
+              outputs: [
+                {
+                  internalType: "uint256",
+                  name: "mintId",
+                  type: "uint256",
+                },
+              ],
+              stateMutability: "view",
+              type: "function",
+            },
+            {
               inputs: [
                 {
                   internalType: "uint256",
@@ -170,6 +194,74 @@ const contracts = {
                   internalType: "address",
                   name: "",
                   type: "address",
+                },
+              ],
+              stateMutability: "view",
+              type: "function",
+            },
+            {
+              inputs: [
+                {
+                  internalType: "uint256",
+                  name: "_commitment",
+                  type: "uint256",
+                },
+              ],
+              name: "getCollection",
+              outputs: [
+                {
+                  internalType: "uint256[]",
+                  name: "collection_",
+                  type: "uint256[]",
+                },
+              ],
+              stateMutability: "view",
+              type: "function",
+            },
+            {
+              inputs: [
+                {
+                  internalType: "uint256",
+                  name: "_tokenId",
+                  type: "uint256",
+                },
+              ],
+              name: "getMarketplaceItem",
+              outputs: [
+                {
+                  components: [
+                    {
+                      internalType: "bool",
+                      name: "listing",
+                      type: "bool",
+                    },
+                    {
+                      internalType: "uint256",
+                      name: "price",
+                      type: "uint256",
+                    },
+                    {
+                      internalType: "uint256",
+                      name: "publisher",
+                      type: "uint256",
+                    },
+                  ],
+                  internalType: "struct Marketplace.MarketItem",
+                  name: "marketplaceItem",
+                  type: "tuple",
+                },
+              ],
+              stateMutability: "view",
+              type: "function",
+            },
+            {
+              inputs: [],
+              name: "groupId",
+              outputs: [
+                {
+                  internalType: "uint256",
+                  name: "",
+                  type: "uint256",
                 },
               ],
               stateMutability: "view",
@@ -201,6 +293,11 @@ const contracts = {
             },
             {
               inputs: [
+                {
+                  internalType: "uint256",
+                  name: "_commitment",
+                  type: "uint256",
+                },
                 {
                   internalType: "uint256",
                   name: "_tokenId",
@@ -238,17 +335,36 @@ const contracts = {
                   type: "uint256",
                 },
                 {
-                  internalType: "address",
-                  name: "publisher",
-                  type: "address",
-                },
-                {
                   internalType: "uint256",
-                  name: "royalty",
+                  name: "publisher",
                   type: "uint256",
                 },
               ],
               stateMutability: "view",
+              type: "function",
+            },
+            {
+              inputs: [
+                {
+                  internalType: "uint256",
+                  name: "_commitment",
+                  type: "uint256",
+                },
+                {
+                  internalType: "string",
+                  name: "_tokenURI",
+                  type: "string",
+                },
+              ],
+              name: "mint",
+              outputs: [
+                {
+                  internalType: "uint256",
+                  name: "",
+                  type: "uint256",
+                },
+              ],
+              stateMutability: "nonpayable",
               type: "function",
             },
             {
@@ -262,30 +378,6 @@ const contracts = {
                 },
               ],
               stateMutability: "view",
-              type: "function",
-            },
-            {
-              inputs: [
-                {
-                  internalType: "string",
-                  name: "tokenURI",
-                  type: "string",
-                },
-                {
-                  internalType: "uint256",
-                  name: "royalty",
-                  type: "uint256",
-                },
-              ],
-              name: "newItem",
-              outputs: [
-                {
-                  internalType: "uint256",
-                  name: "",
-                  type: "uint256",
-                },
-              ],
-              stateMutability: "nonpayable",
               type: "function",
             },
             {
@@ -311,17 +403,50 @@ const contracts = {
               inputs: [
                 {
                   internalType: "uint256",
+                  name: "_commitment",
+                  type: "uint256",
+                },
+                {
+                  internalType: "uint256",
                   name: "_tokenId",
                   type: "uint256",
                 },
               ],
               name: "purchase",
               outputs: [],
-              stateMutability: "payable",
+              stateMutability: "nonpayable",
               type: "function",
             },
             {
               inputs: [
+                {
+                  internalType: "uint256",
+                  name: "_commitment",
+                  type: "uint256",
+                },
+                {
+                  internalType: "uint256",
+                  name: "_tokenId",
+                  type: "uint256",
+                },
+                {
+                  internalType: "address",
+                  name: "_recipient",
+                  type: "address",
+                },
+              ],
+              name: "redeem",
+              outputs: [],
+              stateMutability: "nonpayable",
+              type: "function",
+            },
+            {
+              inputs: [
+                {
+                  internalType: "uint256",
+                  name: "_commitment",
+                  type: "uint256",
+                },
                 {
                   internalType: "uint256",
                   name: "_tokenId",
