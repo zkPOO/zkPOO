@@ -7,7 +7,6 @@ import {
   ExclamationTriangleIcon,
   InformationCircleIcon,
 } from "@heroicons/react/24/solid";
-import { Spinner } from "~~/components/assets/Spinner";
 
 type TPositions = "top-left" | "top-center" | "top-right" | "bottom-left" | "bottom-center" | "bottom-right";
 
@@ -27,7 +26,7 @@ type NotificationOptions = {
 
 const ENUM_STATUSES = {
   success: <CheckCircleIcon className="w-7 text-success" />,
-  loading: <Spinner />,
+  loading: <InformationCircleIcon className="w-7 text-info" />,
   error: <ExclamationCircleIcon className="w-7 text-error" />,
   info: <InformationCircleIcon className="w-7 text-info" />,
   warning: <ExclamationTriangleIcon className="w-7 text-warning" />,
