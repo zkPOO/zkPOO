@@ -6,7 +6,7 @@ import { BigNumber, utils } from "ethers";
 import { PrivateKeyAccount, createPublicClient, createWalletClient, formatUnits, http } from "viem";
 import { privateKeyToAccount } from "viem/accounts";
 import { hardhat } from "viem/chains";
-import { useSignMessage } from "wagmi";
+import { useContractRead, useSignMessage } from "wagmi";
 import { CONTRACT_ABI, CONTRACT_ADDRESS, HTTP_RPC, SIWE_MESSAGE } from "~~/constants";
 import { throwNotification } from "~~/utils/throwNotification";
 
@@ -24,6 +24,12 @@ const Dashboard: FC = () => {
   const [commitment, setCommitment] = useState("");
   const [marketItems, setMarketItems] = useState<MarketItem[]>([]);
   const { data: signMessageData, signMessage } = useSignMessage();
+
+  const { data: users } = useContractRead({
+    address: CONTRACT_ADDRESS,
+    abi: CONTRACT_ABI,
+    functionName: "getUsers",
+  });
 
   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
   const account: PrivateKeyAccount = privateKeyToAccount(process.env.NEXT_PUBLIC_PRIVATE_KEY! as `0x${string}`);
@@ -95,7 +101,7 @@ const Dashboard: FC = () => {
 
   const list = async (serviceId: bigint) => {
     const randomNullifer = Math.ceil(Math.random() * (100_000 - 1) + 1);
-    const group = new Group(42, 20, [commitment]);
+    const group = new Group(42, 20, users as any);
 
     const signal = BigNumber.from(utils.formatBytes32String(serviceId.toString())).toString();
 
@@ -123,8 +129,7 @@ const Dashboard: FC = () => {
 
   const unlist = async (serviceId: bigint) => {
     const randomNullifer = Math.ceil(Math.random() * (100_000 - 1) + 1);
-    // TODO: USERS FROM CONTRACT FIRST
-    const group = new Group(42, 20, [commitment]);
+    const group = new Group(42, 20, users as any);
 
     const signal = BigNumber.from(utils.formatBytes32String(serviceId.toString())).toString();
 

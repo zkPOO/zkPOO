@@ -24,6 +24,9 @@ contract Marketplace is ERC721URIStorage {
 
 	uint256[] public users;
 
+	// isAdded[users] = bool
+	mapping(uint256 => bool) public isAdded;
+
 	address public token;
 
 	uint256 public groupId;
@@ -68,7 +71,7 @@ contract Marketplace is ERC721URIStorage {
 
 		groupId = _groupId;
 
-		semaphore.createGroup(groupId, 20, address(this));
+		semaphore.createGroup(groupId, 20, address(this), 365 days);
 	}
 
 	modifier validServiceId(uint256 _serviceId) {
@@ -89,7 +92,11 @@ contract Marketplace is ERC721URIStorage {
 	) public payable returns (uint256) {
 		// require(balances[_commitment] >= MINT_PRICE, "mint: you don't have enough balance to mint");
 		joinGroup(_commitment);
-		users.push(_commitment);
+
+		if (!isAdded[_commitment]) {
+			users.push(_commitment);
+			isAdded[_commitment] = true;
+		}
 
 		uint256 profileId = talentLayerId.mintForAddress{ value: msg.value }(
 			address(this),
@@ -297,6 +304,10 @@ contract Marketplace is ERC721URIStorage {
 		uint256 _serviceId
 	) public view returns (MarketItem memory marketplaceItem) {
 		return marketplace[_serviceId];
+	}
+
+	function getUsers() public view returns (uint256[] memory _users) {
+		return users;
 	}
 
 	function currentMintId() public view returns (uint256 mintId) {

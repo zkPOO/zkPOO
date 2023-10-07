@@ -1,6 +1,6 @@
 import toast from "react-hot-toast";
 
-export const throwNotification = (type: "success" | "error", message: string) => {
+export const throwNotification = (type: "success" | "error" | "loading", message: string) => {
   return toast[type](message, {
     style: {
       border: "1px solid #713200",
