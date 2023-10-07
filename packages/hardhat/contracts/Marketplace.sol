@@ -29,9 +29,11 @@ contract Marketplace is ERC721URIStorage {
 
     struct MarketItem {
         bool listing;
-        uint256 price;
+        string handle;
         uint256 publisher;
         uint256 serviceId;
+        uint256 votingPower;
+        uint256 votePrice;
     }
 
     // collection[commitment] = tokenIds[]
@@ -74,14 +76,16 @@ contract Marketplace is ERC721URIStorage {
         uint256 _commitment,
         uint256 _platformId,
         string calldata _handle,
-        string memory _tokenURI
+        uint256 _votingPower,
+        uint256 _votePrice
     ) public payable returns (uint256) {
         // require(balances[_commitment] >= MINT_PRICE, "mint: you don't have enough balance to mint");
 
         // _tokenIds.increment();
 
-        uint256 mintId = talentLayerId.mintForAddress{value: msg.value}(address(this), _platformId, _handle);
+        uint256 profileId = talentLayerId.mintForAddress{value: msg.value}(address(this), _platformId, _handle);
 
+        uint256 serviceId = talentLayerService.createService(profileId, _platformId, 'QmbHiRAtcodV6aKcrbh9RsJwYXCFJG2J6qACwKXNfiYp6p', '');
         // uint256 mintId = _tokenIds.current();
 
         // _mint(address(this), mintId);
@@ -89,14 +93,16 @@ contract Marketplace is ERC721URIStorage {
 
         MarketItem memory item;
         item.listing = false;
-        item.price = MAX_INT;
         item.publisher = _commitment;
-        item.serviceId = MAX_INT;
+        item.serviceId = serviceId;
+        item.votingPower = _votingPower;
+        item.votePrice = _votePrice;
+        item.handle = _handle;
 
-        marketplace[mintId] = item;
-        collection[_commitment].push(mintId);
+        marketplace[serviceId] = item;
+        collection[_commitment].push(serviceId);
 
-        return mintId;
+        return serviceId;
     }
 
     function listOnMarketplace(
@@ -126,7 +132,6 @@ contract Marketplace is ERC721URIStorage {
             "listOnMarketplace: only owner can list the token on marketplace"
         );
         marketplace[_tokenId].listing = true;
-        marketplace[_tokenId].price = _price;
         marketplace[_tokenId].serviceId = serviceId;
     }
 
@@ -153,7 +158,6 @@ contract Marketplace is ERC721URIStorage {
             "removeFromMarketplace: only owner can remove the token from marketplace"
         );
         marketplace[_tokenId].listing = false;
-        marketplace[_tokenId].price = MAX_INT;
     }
 
     function redeem(
@@ -207,7 +211,6 @@ contract Marketplace is ERC721URIStorage {
         _removeFromCollection(marketplace[_tokenId].publisher, _tokenId);
 
         marketplace[_tokenId].listing = false;
-        marketplace[_tokenId].price = MAX_INT;
         marketplace[_tokenId].publisher = _commitment;
     }
 

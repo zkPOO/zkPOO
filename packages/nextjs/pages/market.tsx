@@ -1,35 +1,102 @@
-import { FC } from "react";
+import { FC, useEffect, useState } from "react";
+import { createPublicClient, formatUnits, http } from "viem";
+import { hardhat } from "viem/chains";
+import PurchaseVote from "~~/components/modals/PurchaseVote";
+import { CONTRACT_ABI, CONTRACT_ADDRESS, HTTP_RPC } from "~~/constants";
+
+interface MarketItem {
+  isListed: boolean;
+  daoName: string;
+  proposalNum: string;
+  publisher: bigint;
+  serviceId: bigint;
+  votingPower: bigint;
+  votePrice: bigint;
+}
 
 const Market: FC = () => {
+  const [modal, setModal] = useState(false);
+  const [marketItems, setMarketItems] = useState<MarketItem[]>([]);
+
+  const toggleModal = () => setModal(!modal);
+
+  useEffect(() => {
+    const client = createPublicClient({
+      chain: hardhat,
+      transport: http(HTTP_RPC),
+    });
+
+    const getMarketplaceItems = async () => {
+      let arg = 1;
+      const marketplaceItems: MarketItem[] = [];
+
+      while (true) {
+        const marketItem = await client.readContract({
+          address: CONTRACT_ADDRESS,
+          abi: CONTRACT_ABI,
+          functionName: "marketplace",
+          args: [BigInt(arg)],
+        });
+
+        arg += 1;
+
+        if (!marketItem[1]) break;
+        marketplaceItems.push({
+          isListed: marketItem[0],
+          daoName: marketItem[1].split("-")[0],
+          proposalNum: marketItem[1].split("-")[1],
+          publisher: marketItem[2],
+          serviceId: marketItem[3],
+          votingPower: marketItem[4],
+          votePrice: marketItem[5],
+        });
+      }
+
+      setMarketItems(marketplaceItems);
+    };
+
+    getMarketplaceItems();
+    const interval = setInterval(() => getMarketplaceItems(), 5000);
+    return () => {
+      clearInterval(interval);
+    };
+  }, []);
+
   return (
     <div className="grid grid-cols-3 gap-5 mx-auto max-w-7xl px-4">
-      <div className="bg-base-300 px-4 py-2 rounded-xl">
-        <div className="flex items-center justify-between">
-          <a className="font-bold hover:text-primary cursor-pointer transition-all duration-300">@MakerDAO</a>
-          <p className="text-sm">Proposal #4325</p>
-        </div>
-        <div className="divider m-0"></div>
-        <div className="flex items-center justify-between">
-          <strong className="text-sm">Vote Price</strong>
-          <p className="text-sm my-2">30 DAI</p>
-        </div>
-        <div className="flex items-center justify-between">
-          <strong className="text-sm">Voting Power</strong>
-          <p className="text-sm my-2">4500 DAI</p>
-        </div>
-        <div className="flex items-center justify-between">
-          <strong className="text-sm">Voting System</strong>
-          <p className="text-sm my-2">Single choice voting</p>
-        </div>
-        <div className="flex items-center justify-between">
-          <strong className="text-sm">Start Date</strong>
-          <p className="text-sm my-2">Oct 7, 2023, 12:00 PM</p>
-        </div>
-        <div className="flex items-center justify-between">
-          <strong className="text-sm">End Date</strong>
-          <p className="text-sm my-2">Oct 9, 2023, 12:00 PM</p>
-        </div>
-        {/* <p className="text-sm">
+      {modal && <PurchaseVote modal={modal} toggleModal={toggleModal} />}
+      {marketItems &&
+        marketItems.map(marketItem => {
+          return (
+            <div className="bg-base-300 px-4 py-2 rounded-xl" key={marketItem.serviceId.toString()}>
+              <div className="flex items-center justify-between">
+                <a className="font-bold hover:text-primary cursor-pointer transition-all duration-300">
+                  @{marketItem.daoName}
+                </a>
+                <p className="text-sm">Proposal #{marketItem.proposalNum}</p>
+              </div>
+              <div className="divider m-0"></div>
+              <div className="flex items-center justify-between">
+                <strong className="text-sm">Vote Price</strong>
+                <p className="text-sm my-2">{formatUnits(marketItem.votePrice, 18)} DAI</p>
+              </div>
+              <div className="flex items-center justify-between">
+                <strong className="text-sm">Voting Power</strong>
+                <p className="text-sm my-2">{formatUnits(marketItem.votingPower, 18)} DAI</p>
+              </div>
+              <div className="flex items-center justify-between">
+                <strong className="text-sm">Voting System</strong>
+                <p className="text-sm my-2">Single choice voting</p>
+              </div>
+              <div className="flex items-center justify-between">
+                <strong className="text-sm">Start Date</strong>
+                <p className="text-sm my-2">Oct 7, 2023, 12:00 PM</p>
+              </div>
+              <div className="flex items-center justify-between">
+                <strong className="text-sm">End Date</strong>
+                <p className="text-sm my-2">Oct 9, 2023, 12:00 PM</p>
+              </div>
+              {/* <p className="text-sm">
           <strong>Voting System:</strong> Single choice voting
         </p>
         <p className="text-sm">
@@ -38,16 +105,17 @@ const Market: FC = () => {
         <p className="text-sm">
           <strong>End date:</strong> Sep 23, 2023, 12:00 PM
         </p> */}
-        <div className="flex items-center justify-between py-2 gap-4">
-          <button className="h-10 w-full bg-primary text-primary-content rounded-lg font-medium">Purchase Vote</button>
-        </div>
-      </div>
-      <div className="bg-base-300 px-4 py-2 rounded-xl">
-        <div className="flex items-center justify-between">
-          <p className="font-bold">@MakerDAO</p>
-          <p className="text-sm">Proposal #4325</p>
-        </div>
-      </div>
+              <div className="flex items-center justify-between py-2 gap-4">
+                <button
+                  className="h-10 w-full bg-primary text-primary-content rounded-lg font-medium"
+                  onClick={toggleModal}
+                >
+                  Purchase Vote
+                </button>
+              </div>
+            </div>
+          );
+        })}
     </div>
   );
 };

@@ -266,9 +266,9 @@ const contracts = {
                       type: "bool",
                     },
                     {
-                      internalType: "uint256",
-                      name: "price",
-                      type: "uint256",
+                      internalType: "string",
+                      name: "handle",
+                      type: "string",
                     },
                     {
                       internalType: "uint256",
@@ -278,6 +278,16 @@ const contracts = {
                     {
                       internalType: "uint256",
                       name: "serviceId",
+                      type: "uint256",
+                    },
+                    {
+                      internalType: "uint256",
+                      name: "votingPower",
+                      type: "uint256",
+                    },
+                    {
+                      internalType: "uint256",
+                      name: "votePrice",
                       type: "uint256",
                     },
                   ],
@@ -408,9 +418,9 @@ const contracts = {
                   type: "bool",
                 },
                 {
-                  internalType: "uint256",
-                  name: "price",
-                  type: "uint256",
+                  internalType: "string",
+                  name: "handle",
+                  type: "string",
                 },
                 {
                   internalType: "uint256",
@@ -420,6 +430,16 @@ const contracts = {
                 {
                   internalType: "uint256",
                   name: "serviceId",
+                  type: "uint256",
+                },
+                {
+                  internalType: "uint256",
+                  name: "votingPower",
+                  type: "uint256",
+                },
+                {
+                  internalType: "uint256",
+                  name: "votePrice",
                   type: "uint256",
                 },
               ],
@@ -444,9 +464,14 @@ const contracts = {
                   type: "string",
                 },
                 {
-                  internalType: "string",
-                  name: "_tokenURI",
-                  type: "string",
+                  internalType: "uint256",
+                  name: "_votingPower",
+                  type: "uint256",
+                },
+                {
+                  internalType: "uint256",
+                  name: "_votePrice",
+                  type: "uint256",
                 },
               ],
               name: "mint",
