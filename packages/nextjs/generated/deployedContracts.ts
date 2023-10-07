@@ -252,7 +252,7 @@ const contracts = {
               inputs: [
                 {
                   internalType: "uint256",
-                  name: "_tokenId",
+                  name: "_serviceId",
                   type: "uint256",
                 },
               ],
@@ -358,11 +358,6 @@ const contracts = {
                 },
                 {
                   internalType: "uint256",
-                  name: "_profileId",
-                  type: "uint256",
-                },
-                {
-                  internalType: "uint256",
                   name: "_merkleTreeRoot",
                   type: "uint256",
                 },
@@ -388,12 +383,7 @@ const contracts = {
                 },
                 {
                   internalType: "uint256",
-                  name: "_tokenId",
-                  type: "uint256",
-                },
-                {
-                  internalType: "uint256",
-                  name: "_price",
+                  name: "_serviceId",
                   type: "uint256",
                 },
               ],
@@ -579,7 +569,7 @@ const contracts = {
                 },
                 {
                   internalType: "uint256",
-                  name: "_tokenId",
+                  name: "_serviceId",
                   type: "uint256",
                 },
                 {
@@ -627,7 +617,7 @@ const contracts = {
                 },
                 {
                   internalType: "uint256",
-                  name: "_tokenId",
+                  name: "_serviceId",
                   type: "uint256",
                 },
               ],
@@ -855,6 +845,25 @@ const contracts = {
               name: "transferFrom",
               outputs: [],
               stateMutability: "nonpayable",
+              type: "function",
+            },
+            {
+              inputs: [
+                {
+                  internalType: "uint256",
+                  name: "",
+                  type: "uint256",
+                },
+              ],
+              name: "users",
+              outputs: [
+                {
+                  internalType: "uint256",
+                  name: "",
+                  type: "uint256",
+                },
+              ],
+              stateMutability: "view",
               type: "function",
             },
           ],

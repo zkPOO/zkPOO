@@ -14,13 +14,15 @@ import "hardhat/console.sol";
 
 contract Marketplace is ERC721URIStorage {
 	using Counters for Counters.Counter;
-	Counters.Counter private _tokenIds;
+	Counters.Counter private _serviceIds;
 
 	ISemaphore public semaphore;
 	ITalentLayerID public talentLayerId;
 	ITalentLayerService public talentLayerService;
 	ITalentLayerEscrow public talentLayerEscrow;
 	address public talentLayerEscrowAddress;
+
+	uint256[] public users;
 
 	address public token;
 
@@ -39,7 +41,7 @@ contract Marketplace is ERC721URIStorage {
 		uint256 votePrice;
 	}
 
-	// collection[commitment] = tokenIds[]
+	// collection[commitment] = serviceIds[]
 	mapping(uint256 => uint256[]) private collection;
 
 	// marketplace[id] = MarketItem
@@ -67,8 +69,8 @@ contract Marketplace is ERC721URIStorage {
 		semaphore.createGroup(groupId, 20, address(this));
 	}
 
-	modifier validTokenId(uint256 _tokenId) {
-		require(_exists(_tokenId), "modifier: Invalid tokenId");
+	modifier validServiceId(uint256 _serviceId) {
+		require(_exists(_serviceId), "modifier: Invalid serviceId");
 		_;
 	}
 
@@ -84,8 +86,8 @@ contract Marketplace is ERC721URIStorage {
 		uint256 _votePrice
 	) public payable returns (uint256) {
 		// require(balances[_commitment] >= MINT_PRICE, "mint: you don't have enough balance to mint");
-
-		// _tokenIds.increment();
+		joinGroup(_commitment);
+		users.push(_commitment);
 
 		uint256 profileId = talentLayerId.mintForAddress{ value: msg.value }(
 			address(this),
@@ -99,10 +101,6 @@ contract Marketplace is ERC721URIStorage {
 			CID,
 			""
 		);
-		// uint256 mintId = _tokenIds.current();
-
-		// _mint(address(this), mintId);
-		// _setTokenURI(mintId, _tokenURI);
 
 		MarketItem memory item;
 		item.listing = true;
@@ -120,15 +118,13 @@ contract Marketplace is ERC721URIStorage {
 
 	function listOnMarketplace(
 		uint256 _commitment,
-		uint256 _profileId,
 		uint256 _merkleTreeRoot,
 		uint256 _signal,
 		uint256 _nullifierHash,
 		uint256 _externalNullifier,
 		uint256[8] calldata _proof,
-		uint256 _tokenId,
-		uint256 _price
-	) public validTokenId(_tokenId) {
+		uint256 _serviceId
+	) public {
 		semaphore.verifyProof(
 			groupId,
 			_merkleTreeRoot,
@@ -138,19 +134,12 @@ contract Marketplace is ERC721URIStorage {
 			_proof
 		);
 
-		uint256 serviceId = talentLayerService.createService(
-			_profileId,
-			1,
-			CID,
-			""
-		);
-
 		require(
-			_isOwnerOfTokenId(_commitment, _tokenId),
+			_isOwnerOfServiceId(_commitment, _serviceId),
 			"listOnMarketplace: only owner can list the token on marketplace"
 		);
-		marketplace[_tokenId].listing = true;
-		marketplace[_tokenId].serviceId = serviceId;
+
+		marketplace[_serviceId].listing = true;
 	}
 
 	function removeFromMarketplace(
@@ -160,8 +149,8 @@ contract Marketplace is ERC721URIStorage {
 		uint256 _nullifierHash,
 		uint256 _externalNullifier,
 		uint256[8] calldata _proof,
-		uint256 _tokenId
-	) public validTokenId(_tokenId) {
+		uint256 _serviceId
+	) public {
 		semaphore.verifyProof(
 			groupId,
 			_merkleTreeRoot,
@@ -172,10 +161,11 @@ contract Marketplace is ERC721URIStorage {
 		);
 
 		require(
-			_isOwnerOfTokenId(_commitment, _tokenId),
+			_isOwnerOfServiceId(_commitment, _serviceId),
 			"removeFromMarketplace: only owner can remove the token from marketplace"
 		);
-		marketplace[_tokenId].listing = false;
+
+		marketplace[_serviceId].listing = false;
 	}
 
 	function redeem(
@@ -185,9 +175,9 @@ contract Marketplace is ERC721URIStorage {
 		uint256 _nullifierHash,
 		uint256 _externalNullifier,
 		uint256[8] calldata _proof,
-		uint256 _tokenId,
+		uint256 _serviceId,
 		address _recipient
-	) public validTokenId(_tokenId) {
+	) public validServiceId(_serviceId) {
 		semaphore.verifyProof(
 			groupId,
 			_merkleTreeRoot,
@@ -198,16 +188,16 @@ contract Marketplace is ERC721URIStorage {
 		);
 
 		require(
-			!marketplace[_tokenId].listing,
+			!marketplace[_serviceId].listing,
 			"purchase: the token is listed"
 		);
 		require(
-			_isOwnerOfTokenId(_commitment, _tokenId),
+			_isOwnerOfServiceId(_commitment, _serviceId),
 			"redeem: only owner can redeem their token"
 		);
 
-		_transfer(address(this), _recipient, _tokenId);
-		_removeFromCollection(_commitment, _tokenId);
+		_transfer(address(this), _recipient, _serviceId);
+		_removeFromCollection(_commitment, _serviceId);
 	}
 
 	function purchase(
@@ -255,19 +245,19 @@ contract Marketplace is ERC721URIStorage {
 
 		talentLayerEscrow.release(profileId, transactionId, amount);
 		// _addToCollection(_commitment, _serviceId);
-		// _removeFromCollection(marketplace[_serviceId].publisher, _tokenId);
+		// _removeFromCollection(marketplace[_serviceId].publisher, _serviceId);
 
 		marketplace[_serviceId].listing = false;
 		marketplace[_serviceId].publisher = _commitment;
 	}
 
-	function _isOwnerOfTokenId(
+	function _isOwnerOfServiceId(
 		uint256 _commitment,
-		uint256 _tokenId
+		uint256 _serviceId
 	) private view returns (bool) {
 		uint256[] storage tokens = collection[_commitment];
 		for (uint256 i = 0; i < tokens.length; i++) {
-			if (tokens[i] == _tokenId) {
+			if (tokens[i] == _serviceId) {
 				return true;
 			}
 		}
@@ -300,12 +290,12 @@ contract Marketplace is ERC721URIStorage {
 	}
 
 	function getMarketplaceItem(
-		uint256 _tokenId
+		uint256 _serviceId
 	) public view returns (MarketItem memory marketplaceItem) {
-		return marketplace[_tokenId];
+		return marketplace[_serviceId];
 	}
 
 	function currentMintId() public view returns (uint256 mintId) {
-		return _tokenIds.current();
+		return _serviceIds.current();
 	}
 }
