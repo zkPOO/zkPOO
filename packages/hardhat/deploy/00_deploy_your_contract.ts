@@ -21,17 +21,17 @@ const deployYourContract: DeployFunction = async function (hre: HardhatRuntimeEn
   const { deployer } = await hre.getNamedAccounts();
   const { deploy } = hre.deployments;
 
-  const tx = await deploy("Marketplace", {
+  const { semaphore } = await run("deploy:semaphore");
+
+  await deploy("Marketplace", {
     from: deployer,
     // Contract constructor arguments
-    args: ["ZKPOO NFT", "POO"],
+    args: ["ZKPOO NFT", "POO", semaphore.address, 20],
     log: true,
     // autoMine: can be passed to the deploy function to make the deployment process faster on local networks by
     // automatically mining the contract deployment transaction. There is no effect on live networks.
     autoMine: true,
   });
-
-  console.log(tx.address);
   // Get the deployed contract
   // const yourContract = await hre.ethers.getContract("YourContract", deployer);
 };

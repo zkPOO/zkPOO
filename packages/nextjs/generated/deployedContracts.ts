@@ -5,7 +5,7 @@ const contracts = {
       name: "localhost",
       contracts: {
         Marketplace: {
-          address: "0x68B1D87F95878fE05B998F19b66F4baba5De1aed",
+          address: "0x9d4454B023096f34B160D6B654540c56A1F81688",
           abi: [
             {
               inputs: [
@@ -18,6 +18,16 @@ const contracts = {
                   internalType: "string",
                   name: "symbol",
                   type: "string",
+                },
+                {
+                  internalType: "address",
+                  name: "_semaphoreAddress",
+                  type: "address",
+                },
+                {
+                  internalType: "uint256",
+                  name: "_groupId",
+                  type: "uint256",
                 },
               ],
               stateMutability: "nonpayable",
@@ -298,6 +308,44 @@ const contracts = {
                   name: "_commitment",
                   type: "uint256",
                 },
+              ],
+              name: "joinGroup",
+              outputs: [],
+              stateMutability: "nonpayable",
+              type: "function",
+            },
+            {
+              inputs: [
+                {
+                  internalType: "uint256",
+                  name: "_commitment",
+                  type: "uint256",
+                },
+                {
+                  internalType: "uint256",
+                  name: "_merkleTreeRoot",
+                  type: "uint256",
+                },
+                {
+                  internalType: "uint256",
+                  name: "_signal",
+                  type: "uint256",
+                },
+                {
+                  internalType: "uint256",
+                  name: "_nullifierHash",
+                  type: "uint256",
+                },
+                {
+                  internalType: "uint256",
+                  name: "_externalNullifier",
+                  type: "uint256",
+                },
+                {
+                  internalType: "uint256[8]",
+                  name: "_proof",
+                  type: "uint256[8]",
+                },
                 {
                   internalType: "uint256",
                   name: "_tokenId",
@@ -426,6 +474,31 @@ const contracts = {
                 },
                 {
                   internalType: "uint256",
+                  name: "_merkleTreeRoot",
+                  type: "uint256",
+                },
+                {
+                  internalType: "uint256",
+                  name: "_signal",
+                  type: "uint256",
+                },
+                {
+                  internalType: "uint256",
+                  name: "_nullifierHash",
+                  type: "uint256",
+                },
+                {
+                  internalType: "uint256",
+                  name: "_externalNullifier",
+                  type: "uint256",
+                },
+                {
+                  internalType: "uint256[8]",
+                  name: "_proof",
+                  type: "uint256[8]",
+                },
+                {
+                  internalType: "uint256",
                   name: "_tokenId",
                   type: "uint256",
                 },
@@ -446,6 +519,31 @@ const contracts = {
                   internalType: "uint256",
                   name: "_commitment",
                   type: "uint256",
+                },
+                {
+                  internalType: "uint256",
+                  name: "_merkleTreeRoot",
+                  type: "uint256",
+                },
+                {
+                  internalType: "uint256",
+                  name: "_signal",
+                  type: "uint256",
+                },
+                {
+                  internalType: "uint256",
+                  name: "_nullifierHash",
+                  type: "uint256",
+                },
+                {
+                  internalType: "uint256",
+                  name: "_externalNullifier",
+                  type: "uint256",
+                },
+                {
+                  internalType: "uint256[8]",
+                  name: "_proof",
+                  type: "uint256[8]",
                 },
                 {
                   internalType: "uint256",
@@ -507,6 +605,19 @@ const contracts = {
               name: "safeTransferFrom",
               outputs: [],
               stateMutability: "nonpayable",
+              type: "function",
+            },
+            {
+              inputs: [],
+              name: "semaphore",
+              outputs: [
+                {
+                  internalType: "contract ISemaphore",
+                  name: "",
+                  type: "address",
+                },
+              ],
+              stateMutability: "view",
               type: "function",
             },
             {
