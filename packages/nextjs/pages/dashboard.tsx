@@ -123,6 +123,7 @@ const Dashboard: FC = () => {
 
   const unlist = async (serviceId: bigint) => {
     const randomNullifer = Math.ceil(Math.random() * (100_000 - 1) + 1);
+    // TODO: USERS FROM CONTRACT FIRST
     const group = new Group(42, 20, [commitment]);
 
     const signal = BigNumber.from(utils.formatBytes32String(serviceId.toString())).toString();

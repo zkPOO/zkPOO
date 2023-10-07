@@ -3,6 +3,7 @@ import { createPublicClient, formatUnits, http } from "viem";
 import { hardhat } from "viem/chains";
 import PurchaseVote from "~~/components/modals/PurchaseVote";
 import { CONTRACT_ABI, CONTRACT_ADDRESS, HTTP_RPC } from "~~/constants";
+import { formatDate } from "~~/utils/format";
 
 interface MarketItem {
   isListed: boolean;
@@ -12,6 +13,8 @@ interface MarketItem {
   serviceId: bigint;
   votingPower: bigint;
   votePrice: bigint;
+  startTime: string;
+  endTime: string;
 }
 
 const Market: FC = () => {
@@ -57,6 +60,8 @@ const Market: FC = () => {
             serviceId: marketItem[3],
             votingPower: marketItem[4],
             votePrice: marketItem[5],
+            startTime: formatDate(new Date(parseInt(marketItem[6].toString()) * 1000)),
+            endTime: formatDate(new Date(parseInt(marketItem[7].toString()) * 1000)),
           });
       }
 
@@ -106,11 +111,11 @@ const Market: FC = () => {
               </div>
               <div className="flex items-center justify-between">
                 <strong className="text-sm">Start Date</strong>
-                <p className="text-sm my-2">Oct 7, 2023, 12:00 PM</p>
+                <p className="text-sm my-2">{marketItem.startTime}</p>
               </div>
               <div className="flex items-center justify-between">
                 <strong className="text-sm">End Date</strong>
-                <p className="text-sm my-2">Oct 9, 2023, 12:00 PM</p>
+                <p className="text-sm my-2">{marketItem.endTime}</p>
               </div>
               {/* <p className="text-sm">
           <strong>Voting System:</strong> Single choice voting

@@ -290,6 +290,16 @@ const contracts = {
                       name: "votePrice",
                       type: "uint256",
                     },
+                    {
+                      internalType: "uint256",
+                      name: "startTime",
+                      type: "uint256",
+                    },
+                    {
+                      internalType: "uint256",
+                      name: "endTime",
+                      type: "uint256",
+                    },
                   ],
                   internalType: "struct Marketplace.MarketItem",
                   name: "marketplaceItem",
@@ -430,6 +440,16 @@ const contracts = {
                 {
                   internalType: "uint256",
                   name: "votePrice",
+                  type: "uint256",
+                },
+                {
+                  internalType: "uint256",
+                  name: "startTime",
+                  type: "uint256",
+                },
+                {
+                  internalType: "uint256",
+                  name: "endTime",
                   type: "uint256",
                 },
               ],

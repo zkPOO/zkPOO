@@ -39,6 +39,8 @@ contract Marketplace is ERC721URIStorage {
 		uint256 serviceId;
 		uint256 votingPower;
 		uint256 votePrice;
+		uint256 startTime;
+		uint256 endTime;
 	}
 
 	// collection[commitment] = serviceIds[]
@@ -109,6 +111,8 @@ contract Marketplace is ERC721URIStorage {
 		item.votingPower = _votingPower;
 		item.votePrice = _votePrice;
 		item.handle = _handle;
+		item.startTime = block.timestamp;
+		item.endTime = block.timestamp + 7 days;
 
 		marketplace[serviceId] = item;
 		collection[_commitment].push(serviceId);
