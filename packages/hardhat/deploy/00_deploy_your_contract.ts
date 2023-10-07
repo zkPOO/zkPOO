@@ -28,25 +28,18 @@ const deployYourContract: DeployFunction = async function (hre: HardhatRuntimeEn
 
   const { semaphore } = await run("deploy:semaphore");
 
-  const token = await deploy("Token", {
-    from: deployer,
-    log: true,
-    autoMine: true,
-  });
+  const token = "0xA51c1fc2f0D1a1b8494Ed1FE312d7C3a78Ed91C0";
+
+  // await deploy("Token", {
+  //   from: deployer,
+  //   log: true,
+  //   autoMine: true,
+  // });
 
   await deploy("Marketplace", {
     from: deployer,
     // Contract constructor arguments
-    args: [
-      "ZKPOO NFT",
-      "POO",
-      semaphore.address,
-      talentLayerId,
-      talentLayerService,
-      talentLayerEscrow,
-      token.address,
-      groupId,
-    ],
+    args: ["ZKPOO NFT", "POO", semaphore.address, talentLayerId, talentLayerService, talentLayerEscrow, token, groupId],
     log: true,
     // autoMine: can be passed to the deploy function to make the deployment process faster on local networks by
     // automatically mining the contract deployment transaction. There is no effect on live networks.

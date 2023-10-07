@@ -2,7 +2,7 @@ import { useState } from "react";
 import { ConnectButton } from "@rainbow-me/rainbowkit";
 import { QRCodeSVG } from "qrcode.react";
 import CopyToClipboard from "react-copy-to-clipboard";
-import { useDisconnect, useSwitchNetwork } from "wagmi";
+import { useDisconnect, useEnsName, useSwitchNetwork } from "wagmi";
 import {
   ArrowLeftOnRectangleIcon,
   ArrowTopRightOnSquareIcon,
@@ -11,7 +11,7 @@ import {
   DocumentDuplicateIcon,
   QrCodeIcon,
 } from "@heroicons/react/24/outline";
-import { Address, Balance } from "~~/components/scaffold-eth";
+import { Address, Balance, BlockieAvatar } from "~~/components/scaffold-eth";
 import { useAutoConnect, useNetworkColor } from "~~/hooks/scaffold-eth";
 import { getBlockExplorerAddressLink, getTargetNetwork } from "~~/utils/scaffold-eth";
 
@@ -20,11 +20,16 @@ import { getBlockExplorerAddressLink, getTargetNetwork } from "~~/utils/scaffold
  */
 export const RainbowKitCustomConnectButton = () => {
   useAutoConnect();
+  const [address, setAddress] = useState("");
   const networkColor = useNetworkColor();
   const configuredNetwork = getTargetNetwork();
   const { disconnect } = useDisconnect();
   const { switchNetwork } = useSwitchNetwork();
   const [addressCopied, setAddressCopied] = useState(false);
+
+  const { data: ensName } = useEnsName({
+    address,
+  });
 
   return (
     <ConnectButton.Custom>
@@ -33,6 +38,8 @@ export const RainbowKitCustomConnectButton = () => {
         const blockExplorerAddressLink = account
           ? getBlockExplorerAddressLink(getTargetNetwork(), account.address)
           : undefined;
+
+        if (account && account.address) setAddress(account.address);
 
         return (
           <>
@@ -93,9 +100,9 @@ export const RainbowKitCustomConnectButton = () => {
                     <span className="text-xs">{chain.name}</span>
                   </div>
                   <div className="dropdown dropdown-end leading-3">
-                    <label tabIndex={0} className="btn btn-primary btn-sm dropdown-toggle gap-0 h-10 w-36">
-                      {/* <BlockieAvatar address={account.address} size={30} ensImage={account.ensAvatar} /> */}
-                      <span className="text-sm normal-case">{account.displayName}</span>
+                    <label tabIndex={0} className="btn btn-primary btn-sm dropdown-toggle gap-2 h-10 w-36">
+                      <BlockieAvatar address={account.address} size={20} ensImage={account.ensAvatar} />
+                      <span className="text-xs normal-case">{ensName ? ensName : account.displayName}</span>
                       {/* <ChevronDownIcon className="h-4 w-3 ml-2 sm:ml-0" /> */}
                     </label>
                     <ul

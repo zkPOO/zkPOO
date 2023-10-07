@@ -6,6 +6,7 @@ import { privateKeyToAccount } from "viem/accounts";
 import { hardhat } from "viem/chains";
 import { useSignMessage } from "wagmi";
 import { CONTRACT_ABI, CONTRACT_ADDRESS, HTTP_RPC, SIWE_MESSAGE } from "~~/constants";
+import { throwNotification } from "~~/utils/throwNotification";
 
 interface Props {
   modal: boolean;
@@ -53,6 +54,7 @@ const DelegateModal: FC<Props> = ({ modal, toggleModal }) => {
     if (!commitment) return;
 
     const call = async () => {
+      setCommitment("");
       const { request } = await publicClient.simulateContract({
         address: CONTRACT_ADDRESS,
         abi: CONTRACT_ABI,
@@ -66,8 +68,8 @@ const DelegateModal: FC<Props> = ({ modal, toggleModal }) => {
         ],
         value: BigInt(50000000000000000n),
       });
-      setCommitment("");
       client.writeContract(request).then(console.log);
+      throwNotification("success", "Transaction completed successfully, you have delegated your voting power.");
       toggleModal();
     };
     call();

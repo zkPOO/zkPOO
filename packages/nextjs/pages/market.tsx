@@ -16,9 +16,15 @@ interface MarketItem {
 
 const Market: FC = () => {
   const [modal, setModal] = useState(false);
+  const [serviceId, setServiceId] = useState<bigint | undefined>();
   const [marketItems, setMarketItems] = useState<MarketItem[]>([]);
 
   const toggleModal = () => setModal(!modal);
+
+  const openToggleModal = (serviceId: bigint) => {
+    setModal(!modal);
+    setServiceId(serviceId);
+  };
 
   useEffect(() => {
     const client = createPublicClient({
@@ -41,30 +47,40 @@ const Market: FC = () => {
         arg += 1;
 
         if (!marketItem[1]) break;
-        marketplaceItems.push({
-          isListed: marketItem[0],
-          daoName: marketItem[1].split("-")[0],
-          proposalNum: marketItem[1].split("-")[1],
-          publisher: marketItem[2],
-          serviceId: marketItem[3],
-          votingPower: marketItem[4],
-          votePrice: marketItem[5],
-        });
+
+        if (marketItem[0])
+          marketplaceItems.push({
+            isListed: marketItem[0],
+            daoName: marketItem[1].split("-")[0],
+            proposalNum: marketItem[1].split("-")[1],
+            publisher: marketItem[2],
+            serviceId: marketItem[3],
+            votingPower: marketItem[4],
+            votePrice: marketItem[5],
+          });
       }
 
       setMarketItems(marketplaceItems);
     };
 
     getMarketplaceItems();
-    const interval = setInterval(() => getMarketplaceItems(), 5000);
+    const interval = setInterval(() => getMarketplaceItems(), 2000);
     return () => {
       clearInterval(interval);
     };
   }, []);
 
+  if (marketItems.length <= 0) {
+    return (
+      <div className="flex items-center justify-center mx-auto max-w-7xl px-4 pt-40 font-bold">
+        There are currently no items in the marketplace :{"("}
+      </div>
+    );
+  }
+
   return (
     <div className="grid grid-cols-3 gap-5 mx-auto max-w-7xl px-4">
-      {modal && <PurchaseVote modal={modal} toggleModal={toggleModal} />}
+      {modal && !!serviceId && <PurchaseVote serviceId={serviceId} modal={modal} toggleModal={toggleModal} />}
       {marketItems &&
         marketItems.map(marketItem => {
           return (
@@ -108,7 +124,7 @@ const Market: FC = () => {
               <div className="flex items-center justify-between py-2 gap-4">
                 <button
                   className="h-10 w-full bg-primary text-primary-content rounded-lg font-medium"
-                  onClick={toggleModal}
+                  onClick={() => openToggleModal(marketItem.serviceId)}
                 >
                   Purchase Vote
                 </button>
