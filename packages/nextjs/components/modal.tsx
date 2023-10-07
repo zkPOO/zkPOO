@@ -60,9 +60,10 @@ const Modal: FC<Props> = ({ title, isOpen, color = "base-200", closeModal, child
                   ),
                 )}
               >
-                <Dialog.Title as="h3" className="text-lg font-bold leading-6 text-black pb-4">
+                <Dialog.Title as="h3" className="text-lg font-bold leading-6 text-neutral">
                   {title}
                 </Dialog.Title>
+                <div className="divider m-0"></div>
                 {children}
               </Dialog.Panel>
             </Transition.Child>

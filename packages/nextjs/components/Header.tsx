@@ -8,8 +8,8 @@ import { RainbowKitCustomConnectButton } from "~~/components/scaffold-eth";
 const Header: FC = () => {
   const routes = Object.entries({
     Market: "/market",
-    Collection: "/collection",
-    Mint: "",
+    Dashboard: "/dashboard",
+    Delegate: "",
   });
 
   const [modal, setModal] = useState(false);
@@ -17,8 +17,52 @@ const Header: FC = () => {
   return (
     <header className="py-10 mx-auto max-w-7xl">
       {modal && (
-        <Modal title="Mint" isOpen={modal} closeModal={() => setModal(false)}>
-          This is some children
+        <Modal title="Delegate Vote" isOpen={modal} closeModal={() => setModal(false)}>
+          <div className="flex flex-col gap-2">
+            <div className="form-control w-full">
+              <label className="label">
+                <span className="label-text font-bold -mb-1">DAO Name</span>
+              </label>
+              <input
+                type="text"
+                placeholder="Input DAO name"
+                className="input input-bordered w-full h-10 placeholder:text-sm"
+              />
+            </div>
+            <div className="form-control w-full">
+              <label className="label">
+                <span className="label-text font-bold">Proposal Number</span>
+              </label>
+              <input
+                type="text"
+                placeholder="Input DAO proposal number"
+                className="input input-bordered w-full h-10 placeholder:text-sm"
+              />
+            </div>
+            <div className="form-control w-full">
+              <label className="label">
+                <span className="label-text font-bold">Voting Power</span>
+              </label>
+              <input
+                type="text"
+                placeholder="Input your voting power"
+                className="input input-bordered w-full h-10 placeholder:text-sm"
+              />
+            </div>
+            <div className="form-control w-full">
+              <label className="label">
+                <span className="label-text font-bold">Vote Price</span>
+              </label>
+              <input
+                type="text"
+                placeholder="Input your vote price"
+                className="input input-bordered w-full h-10 placeholder:text-sm"
+              />
+            </div>
+          </div>
+          <button className="h-10 w-full bg-primary text-primary-content rounded-lg font-medium mt-4">
+            Delegate Vote
+          </button>
         </Modal>
       )}
       <nav className="relative z-50 flex justify-between sm:mx-4">
