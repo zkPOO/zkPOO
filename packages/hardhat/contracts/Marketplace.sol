@@ -12,6 +12,10 @@ import "./interfaces/ITalentLayerEscrow.sol";
 
 import "hardhat/console.sol";
 
+/**
+ * @author  ahmedhamedaly
+ * @title   Marketplace
+ */
 contract Marketplace is ERC721URIStorage {
 	using Counters for Counters.Counter;
 	Counters.Counter private _serviceIds;
@@ -83,6 +87,15 @@ contract Marketplace is ERC721URIStorage {
 		semaphore.addMember(groupId, _commitment);
 	}
 
+	/**
+	 * @notice  Mint a profile and create a service
+	 * @param   _commitment  .
+	 * @param   _platformId  .
+	 * @param   _handle  .
+	 * @param   _votingPower  .
+	 * @param   _votePrice  .
+	 * @return  uint256  .
+	 */
 	function mint(
 		uint256 _commitment,
 		uint256 _platformId,
@@ -127,6 +140,16 @@ contract Marketplace is ERC721URIStorage {
 		return serviceId;
 	}
 
+	/**
+	 * @notice  List the proposal on the marketplace
+	 * @param   _commitment  .
+	 * @param   _merkleTreeRoot  .
+	 * @param   _signal  .
+	 * @param   _nullifierHash  .
+	 * @param   _externalNullifier  .
+	 * @param   _proof  .
+	 * @param   _serviceId  .
+	 */
 	function listOnMarketplace(
 		uint256 _commitment,
 		uint256 _merkleTreeRoot,
@@ -153,6 +176,16 @@ contract Marketplace is ERC721URIStorage {
 		marketplace[_serviceId].listing = true;
 	}
 
+	/**
+	 * @notice  Remove the proposal from the marketplace
+=	 * @param   _commitment  .
+	 * @param   _merkleTreeRoot  .
+	 * @param   _signal  .
+	 * @param   _nullifierHash  .
+	 * @param   _externalNullifier  .
+	 * @param   _proof  .
+	 * @param   _serviceId  .
+	 */
 	function removeFromMarketplace(
 		uint256 _commitment,
 		uint256 _merkleTreeRoot,
@@ -179,6 +212,18 @@ contract Marketplace is ERC721URIStorage {
 		marketplace[_serviceId].listing = false;
 	}
 
+	/**
+	 * @notice  Redeem the proposal
+	 * @dev 		Removes the privacy layer and reveals your identity
+	 * @param   _commitment  .
+	 * @param   _merkleTreeRoot  .
+	 * @param   _signal  .
+	 * @param   _nullifierHash  .
+	 * @param   _externalNullifier  .
+	 * @param   _proof  .
+	 * @param   _serviceId  .
+	 * @param   _recipient  .
+	 */
 	function redeem(
 		uint256 _commitment,
 		uint256 _merkleTreeRoot,
@@ -211,6 +256,13 @@ contract Marketplace is ERC721URIStorage {
 		_removeFromCollection(_commitment, _serviceId);
 	}
 
+	/**
+	 * @notice  Auto accept the proposal, creates tx and settles amounts
+	 * @param   _commitment  .
+	 * @param   _serviceId  .
+	 * @param   _platformId  .
+	 * @param   _handle  .
+	 */
 	function purchase(
 		uint256 _commitment,
 		uint256 _serviceId,
