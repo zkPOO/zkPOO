@@ -252,8 +252,6 @@ contract Marketplace is ERC721URIStorage {
 			CID
 		);
 
-		// // TODO: VOTING LOGIC HERE...
-
 		talentLayerEscrow.release(profileId, transactionId, amount);
 		// _addToCollection(_commitment, _serviceId);
 		// _removeFromCollection(marketplace[_serviceId].publisher, _serviceId);

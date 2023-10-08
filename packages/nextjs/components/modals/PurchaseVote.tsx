@@ -3,7 +3,7 @@ import Modal from "./modal";
 import { Identity } from "@semaphore-protocol/identity";
 import { PrivateKeyAccount, createPublicClient, createWalletClient, http } from "viem";
 import { privateKeyToAccount } from "viem/accounts";
-import { hardhat } from "viem/chains";
+import { sepolia } from "viem/chains";
 import { useSignMessage } from "wagmi";
 import { CONTRACT_ABI, CONTRACT_ADDRESS, HTTP_RPC, SIWE_MESSAGE } from "~~/constants";
 import { throwNotification } from "~~/utils/throwNotification";
@@ -25,13 +25,13 @@ const PurchaseVote: FC<Props> = ({ serviceId, modal, toggleModal }) => {
   const account: PrivateKeyAccount = privateKeyToAccount(process.env.NEXT_PUBLIC_PRIVATE_KEY! as `0x${string}`);
 
   const publicClient = createPublicClient({
-    chain: hardhat,
+    chain: sepolia,
     transport: http(HTTP_RPC),
   });
 
   const client = createWalletClient({
     account,
-    chain: hardhat,
+    chain: sepolia,
     transport: http(HTTP_RPC),
   });
 

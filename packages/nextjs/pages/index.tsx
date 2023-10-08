@@ -1,3 +1,4 @@
+import Link from "next/link";
 import type { NextPage } from "next";
 import { MetaHeader } from "~~/components/MetaHeader";
 
@@ -6,19 +7,20 @@ const Home: NextPage = () => {
     <>
       <MetaHeader />
       <div className="mx-auto max-w-7xl px-4">
-        <div className="h-screen flex flex-col items-center justify-center gap-6 px-16 -mt-44">
-          <h1 className="font-black text-6xl text-center">
-            Think of something to add here... <span className="text-primary">Color here </span>
+        <div className="flex flex-col items-center gap-6 px-16 mt-44 mb-24">
+          <h1 className="font-black text-5xl text-center">
+            Delegate Your Vote & Guard Your Privacy. <strong className="text-primary">Your Vote, Your Secret.</strong>
+            {/* <strong className="text-primary">Vote Delegation Marketplace.</strong> */}
           </h1>
           <p className="font-medium text-center mx-28 opacity-90">
-            Lorem ipsum dolor sit amet, consectetur adipisicing elit. Repudiandae eius provident voluptatum harum eaque
-            doloribus rem voluptatibus ducimus iste molestias laborum, fugit ullam quaerat magnam perspiciatis
-            architecto asperiores voluptatem mollitia!{" "}
+            Discover a paradigm shift in democratic engagement with zkPOO{"'"}s groundbreaking protocol. Delegate your
+            vote securely while keeping your identity confidential, ensuring that your voice remains your secret,
+            empowering a more private and impactful democratic process.
           </p>
           <div className="flex gap-4 items-center">
-            <button className="btn btn-primary btn-sm normal-case h-12 w-40 text-sm" type="button">
+            <Link href={"/market"} className="btn btn-primary btn-sm normal-case h-12 w-40 text-sm" type="button">
               Marketplace
-            </button>
+            </Link>
 
             <button className="btn btn-primary btn-outline btn-sm normal-case h-12 w-40 text-sm" type="button">
               Watch video

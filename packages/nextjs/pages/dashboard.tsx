@@ -5,7 +5,7 @@ import { generateProof } from "@semaphore-protocol/proof";
 import { BigNumber, utils } from "ethers";
 import { PrivateKeyAccount, createPublicClient, createWalletClient, formatUnits, http } from "viem";
 import { privateKeyToAccount } from "viem/accounts";
-import { hardhat } from "viem/chains";
+import { sepolia } from "viem/chains";
 import { useContractRead, useSignMessage } from "wagmi";
 import { CONTRACT_ABI, CONTRACT_ADDRESS, HTTP_RPC, SIWE_MESSAGE } from "~~/constants";
 import { throwNotification } from "~~/utils/throwNotification";
@@ -35,13 +35,13 @@ const Dashboard: FC = () => {
   const account: PrivateKeyAccount = privateKeyToAccount(process.env.NEXT_PUBLIC_PRIVATE_KEY! as `0x${string}`);
 
   const publicClient = createPublicClient({
-    chain: hardhat,
+    chain: sepolia,
     transport: http(HTTP_RPC),
   });
 
   const client = createWalletClient({
     account,
-    chain: hardhat,
+    chain: sepolia,
     transport: http(HTTP_RPC),
   });
 
@@ -57,7 +57,7 @@ const Dashboard: FC = () => {
 
   useEffect(() => {
     const client = createPublicClient({
-      chain: hardhat,
+      chain: sepolia,
       transport: http(HTTP_RPC),
     });
 

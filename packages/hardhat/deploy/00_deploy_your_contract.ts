@@ -21,14 +21,14 @@ const deployYourContract: DeployFunction = async function (hre: HardhatRuntimeEn
   const { deployer } = await hre.getNamedAccounts();
   const { deploy } = hre.deployments;
 
-  const talentLayerId = "0xCf7Ed3AccA5a467e9e704C703E8D87F634fB0Fc9";
-  const talentLayerService = "0x5FC8d32690cc91D4c39d9d3abcBD16989F875707";
-  const talentLayerEscrow = "0xB7f8BC63BbcaD18155201308C8f3540b07f84F5e";
+  const talentLayerId = "0x8fcC971DC5B7D006e9C435D126829f18FE923E35";
+  const talentLayerService = "0x14e46f6d746bc5F0B01B2AF4a2FE9cC2252A23bA";
+  const talentLayerEscrow = "0xBe63C8B74369bE4aaf138558feA3c761bE066FF1";
   const groupId = 42;
 
   const { semaphore } = await run("deploy:semaphore");
 
-  const token = "0xA51c1fc2f0D1a1b8494Ed1FE312d7C3a78Ed91C0";
+  const token = "0x177394dF8259Fee65d53F99e7486E3F92c9F3252";
 
   // await deploy("Token", {
   //   from: deployer,

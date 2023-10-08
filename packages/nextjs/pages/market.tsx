@@ -1,6 +1,6 @@
 import { FC, useEffect, useState } from "react";
 import { createPublicClient, formatUnits, http } from "viem";
-import { hardhat } from "viem/chains";
+import { sepolia } from "viem/chains";
 import PurchaseVote from "~~/components/modals/PurchaseVote";
 import { CONTRACT_ABI, CONTRACT_ADDRESS, HTTP_RPC } from "~~/constants";
 import { formatDate } from "~~/utils/format";
@@ -31,7 +31,7 @@ const Market: FC = () => {
 
   useEffect(() => {
     const client = createPublicClient({
-      chain: hardhat,
+      chain: sepolia,
       transport: http(HTTP_RPC),
     });
 
